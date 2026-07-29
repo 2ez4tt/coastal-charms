@@ -1,6 +1,6 @@
 {
   "settings": {
-    "whatsapp": "",
+    "whatsapp": "03365236845",
     "instagram": "thecoastalcharms_",
     "currency": "Rs",
     "notice": "Made to order · 2–3 days · Delivery across Pakistan",
@@ -10,10 +10,18 @@
     "story_2": "If you want something in a particular colour, or a length that fits you properly, say so in the message. Most pieces can be made your way."
   },
   "categories": [
-    { "name": "Bracelets" },
-    { "name": "Bag charms" },
-    { "name": "Phone straps" },
-    { "name": "Keyrings" }
+    {
+      "name": "Bracelets"
+    },
+    {
+      "name": "Bag charms"
+    },
+    {
+      "name": "Phone straps"
+    },
+    {
+      "name": "Keyrings"
+    }
   ],
   "products": [
     {
