@@ -1,0 +1,79 @@
+/* Hallmark · tokens · The Coastal Charms
+ * route: custom (tuned) · vibe: "sun-bleached shore, sea glass, hand-strung"
+ * axes: light / roman-serif / cool-turquoise
+ */
+
+:root {
+  /* ── Colour ──────────────────────────────────────────────
+     Anchor hue 195° (sea glass). Paper tinted warm (85°) toward
+     driftwood; ink tinted 65°. Every neutral carries chroma > 0. */
+
+  --color-paper:     oklch(96%  0.011 85);   /* warm sand           */
+  --color-paper-2:   oklch(93%  0.014 82);   /* one step down       */
+  --color-paper-3:   oklch(89%  0.017 80);   /* image slot ground   */
+
+  --color-ink:       oklch(23%  0.014 65);   /* wet driftwood       */
+  --color-ink-2:     oklch(38%  0.012 68);   /* secondary text      */
+
+  --color-rule:      oklch(80%  0.014 82);   /* hairline dividers   */
+  --color-rule-2:    oklch(87%  0.012 82);   /* softer dividers     */
+  --color-muted:     oklch(52%  0.010 72);   /* de-emphasised text  */
+  --color-neutral:   oklch(44%  0.010 70);
+
+  --color-accent:    oklch(58%  0.098 195);  /* sea glass           */
+  --color-accent-2:  oklch(50%  0.088 197);  /* sea glass, pressed  */
+  --color-accent-3:  oklch(42%  0.082 198);  /* accent on text ≥4.5 */
+  --color-accent-ink: oklch(97% 0.008 195);  /* text on accent fill */
+
+  --color-gold:      oklch(72%  0.105 78);   /* hardware note       */
+  --color-gold-deep: oklch(60%  0.098 76);
+
+  --color-focus:     oklch(54%  0.185 195);
+  --color-error:     oklch(52%  0.150 28);
+  --color-success:   oklch(52%  0.110 155);
+
+  /* ── Type ────────────────────────────────────────────── */
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body:    "Karla", ui-sans-serif, system-ui, sans-serif;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-md:   1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.375rem;
+  --text-2xl:  1.75rem;
+  --text-3xl:  2.25rem;
+  --text-4xl:  3rem;
+  --text-display-s: clamp(2rem, 6vw, 3.25rem);
+  --text-display:   clamp(2.5rem, 8vw, 4.5rem);
+
+  /* ── Space · 4pt scale ───────────────────────────────── */
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 9rem;
+
+  --page-gutter: clamp(1rem, 5vw, 3.5rem);
+  --measure: 62ch;
+
+  /* ── Rules & radius ──────────────────────────────────── */
+  --rule-hair: 1px;
+  --rule-thick: 2px;
+  --radius-none: 0;
+  --radius-sm: 2px;
+
+  /* ── Motion ──────────────────────────────────────────── */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long:  420ms;
+}

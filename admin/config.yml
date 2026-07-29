@@ -1,0 +1,163 @@
+# ══════════════════════════════════════════════════════════════
+#  The Coastal Charms — editor configuration
+#
+#  BEFORE THIS WORKS you must change ONE line below: `repo`.
+#  See SETUP-CMS.md in the folder above for the walkthrough.
+# ══════════════════════════════════════════════════════════════
+
+backend:
+  name: git-gateway
+
+  # Your GitHub username and repository name.
+  # Repo: github.com/2ez4tt/coastal-charms
+  repo: 2ez4tt/coastal-charms
+
+  branch: main
+
+  # ── CHANGE THIS TOO ──────────────────────────────────────────
+  # DecapBridge gives the shop owner email + password login, so
+  # they never need a GitHub account. Copy the identity_url from
+  # your DecapBridge dashboard (Step 3 in SETUP-CMS.md) — it ends
+  # with your own site id.
+  identity_url: https://auth.decapbridge.com/sites/YOUR-SITE-ID
+  gateway_url: https://gateway.decapbridge.com
+
+  commit_messages:
+    create: 'Added {{collection}} "{{slug}}"'
+    update: 'Updated {{collection}} "{{slug}}"'
+    delete: 'Removed {{collection}} "{{slug}}"'
+    uploadMedia: 'Uploaded a photo'
+    deleteMedia: 'Removed a photo'
+
+# Where uploaded photos are stored in the repo, and how the
+# site refers to them once published.
+media_folder: "images/uploads"
+public_folder: "images/uploads"
+
+# Interface language
+locale: en
+
+# Editing goes live immediately (no draft/review workflow —
+# simpler for a one-person shop).
+publish_mode: simple
+
+collections:
+  # ════════════════════════════════════════════════════════════
+  #  THE SHOP — one file, three sections
+  # ════════════════════════════════════════════════════════════
+  - name: "shop"
+    label: "Your shop"
+    files:
+      # ── 1 · Products ────────────────────────────────────────
+      - name: "products"
+        label: "Products"
+        file: "shop.json"
+        description: "Add, edit, reorder or remove the pieces you sell."
+        format: "json"
+        fields:
+          - label: "Settings"
+            name: "settings"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "WhatsApp number"
+                name: "whatsapp"
+                widget: "string"
+                required: false
+                default: ""
+                pattern: ["^$|^[0-9]{8,15}$", "Digits only — country code first, no + and no spaces. Example: 923001234567"]
+                hint: "Country code first, digits only. 0300 1234567 becomes 923001234567"
+
+              - label: "Instagram username"
+                name: "instagram"
+                widget: "string"
+                default: "thecoastalcharms_"
+                hint: "Without the @ symbol"
+
+              - label: "Currency label"
+                name: "currency"
+                widget: "string"
+                default: "Rs"
+
+              - label: "Notice line"
+                name: "notice"
+                widget: "string"
+                required: false
+                hint: "Small line at the top of the shop. Leave empty to hide it."
+
+              - label: "Tagline under the shop name"
+                name: "tagline"
+                widget: "text"
+
+              - label: "Closing line at the bottom"
+                name: "closing_line"
+                widget: "string"
+
+              - label: "Story — first paragraph"
+                name: "story_1"
+                widget: "text"
+
+              - label: "Story — second paragraph"
+                name: "story_2"
+                widget: "text"
+
+          - label: "Categories"
+            name: "categories"
+            widget: "list"
+            collapsed: true
+            label_singular: "Category"
+            hint: "The filter buttons across the top. Each product must use one of these names."
+            fields:
+              - label: "Name"
+                name: "name"
+                widget: "string"
+
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            label_singular: "Product"
+            summary: "{{fields.name}} — {{fields.price}}"
+            fields:
+              - label: "Name"
+                name: "name"
+                widget: "string"
+                hint: "What the piece is called"
+
+              - label: "Price"
+                name: "price"
+                widget: "number"
+                value_type: "int"
+                min: 0
+                hint: "Numbers only — no Rs, no commas"
+
+              - label: "Category"
+                name: "category"
+                widget: "select"
+                options:
+                  - "Bracelets"
+                  - "Bag charms"
+                  - "Phone straps"
+                  - "Keyrings"
+                hint: "Pick which filter this piece appears under. To add a new option here, edit admin/config.yml."
+
+              - label: "Photo"
+                name: "image"
+                widget: "image"
+                required: false
+                allow_multiple: false
+                media_library:
+                  config:
+                    max_file_size: 3000000
+                hint: "Tap to upload from your phone. Portrait photos look best."
+
+              - label: "Short note"
+                name: "note"
+                widget: "string"
+                required: false
+                hint: "One line — materials, length, colour. Optional."
+
+              - label: "Sold out"
+                name: "sold"
+                widget: "boolean"
+                default: false
+                hint: "Turn on to mark this piece as sold"

@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Coastal Charms — sea-inspired jewellery from Gwadar</title>
+<meta name="description" content="Handmade bracelets, bag charms, phone straps and keyrings, hand-strung from shells and sea glass gathered on the shores of Gwadar. Order on WhatsApp.">
+
+<meta property="og:title" content="The Coastal Charms">
+<meta property="og:description" content="Sea-inspired jewellery and coastal treasures, hand-picked from the shores of Gwadar.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#shop">Skip to the shop</a>
+
+<div class="shell">
+
+  <!-- ═══ N6 · Masthead ═══════════════════════════════════ -->
+  <header class="mast rise">
+    <p class="mast__line" id="mast-notice">Hand-strung on the shore</p>
+    <h1 class="mast__name">The Coastal <em>Charms</em></h1>
+    <p class="mast__tag" id="mast-tagline">Sea-inspired jewellery and coastal treasures, gathered from the shores of Gwadar.</p>
+    <nav class="mast__nav" aria-label="Primary">
+      <ul>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#how">How to order</a></li>
+        <li><a href="#story">Our story</a></li>
+        <li><a id="nav-instagram" href="#" rel="noopener">Instagram</a></li>
+      </ul>
+    </nav>
+    <hr class="mast__rule" aria-hidden="true">
+  </header>
+
+  <main id="shop">
+
+    <!-- ═══ Inventory header ══════════════════════════════ -->
+    <div class="inventory rise rise-2">
+      <p class="inventory__count" id="inventory-count">Loading the shop…</p>
+      <p class="inventory__notice" id="inventory-notice"></p>
+    </div>
+
+    <!-- ═══ Category filter ═══════════════════════════════ -->
+    <div class="filters rise rise-2" id="filters" role="group" aria-label="Filter by category"></div>
+
+    <!-- ═══ F6 · Product grid ═════════════════════════════ -->
+    <ul class="grid rise rise-3" id="grid" aria-live="polite"></ul>
+
+    <!-- ═══ How to order ══════════════════════════════════ -->
+    <section class="how" id="how" aria-labelledby="how-title">
+      <h2 class="how__title" id="how-title">Ordering takes about a minute.</h2>
+      <div class="how__steps">
+        <div class="how__step">
+          <span class="how__num">1</span>
+          <p><strong>Pick your piece</strong>Tap <em>Order on WhatsApp</em> under anything you like.</p>
+        </div>
+        <div class="how__step">
+          <span class="how__num">2</span>
+          <p><strong>WhatsApp opens, already filled in</strong>The name and price are written for you. Just press send.</p>
+        </div>
+        <div class="how__step">
+          <span class="how__num">3</span>
+          <p><strong>We confirm and arrange payment</strong>Bank transfer, Easypaisa or JazzCash — whatever suits you.</p>
+        </div>
+        <div class="how__step">
+          <span class="how__num">4</span>
+          <p><strong>It ships</strong>Made to order, then posted anywhere in Pakistan.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Story ═════════════════════════════════════════ -->
+    <section class="story" id="story" aria-labelledby="story-title">
+      <h2 id="story-title">Everything here started on a beach.</h2>
+      <p id="story-1">The shells, the sea glass, the worn-smooth pieces that wash up along the Gwadar coast — they are collected by hand, sorted, and strung one at a time. No two pieces come out identical, because no two shells are.</p>
+      <p id="story-2">If you want something in a particular colour, or a length that fits you properly, say so in the message. Most pieces can be made your way.</p>
+      <p>More photographs, and what has just been made, go up on <a id="story-instagram" href="#" rel="noopener">Instagram</a> first.</p>
+    </section>
+
+  </main>
+
+  <!-- ═══ Ft5 · Statement footer ══════════════════════════ -->
+  <footer class="foot">
+    <p class="foot__line" id="foot-line">Picked up at low tide, sent out by post.</p>
+    <div class="foot__meta">
+      <span>The Coastal Charms · Gwadar, Balochistan</span>
+      <a id="foot-instagram" href="#" rel="noopener"><span>@thecoastalcharms_</span></a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- In-app toast — never a native alert/confirm/prompt -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Optional offline fallback: lets the page work when opened straight
+     from a folder (where browsers block reading shop.json). Safe to delete
+     once the site is published — shop.json is the real source of truth. -->
+<script src="products.js" onerror="void 0"></script>
+
+<script>
+(function () {
+  "use strict";
+
+  var grid      = document.getElementById("grid");
+  var filterBar = document.getElementById("filters");
+  var countEl   = document.getElementById("inventory-count");
+  var noticeEl  = document.getElementById("inventory-notice");
+  var toastEl   = document.getElementById("toast");
+
+  var SHOP = { settings: {}, categories: [], products: [] };
+  var activeCategory = "All";
+  var toastTimer = null;
+
+  /* ── helpers ─────────────────────────────────────────── */
+
+  function esc(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function money(n) {
+    var cur = SHOP.settings.currency || "Rs";
+    return cur + " " + Number(n).toLocaleString("en-PK");
+  }
+
+  function toast(html, ms) {
+    toastEl.innerHTML = html;
+    toastEl.classList.add("is-visible");
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(function () {
+      toastEl.classList.remove("is-visible");
+    }, ms || 6000);
+  }
+
+  function setText(id, value) {
+    var el = document.getElementById(id);
+    if (el && typeof value === "string" && value.trim()) el.textContent = value;
+  }
+
+  /* ── WhatsApp ────────────────────────────────────────── */
+
+  var waIcon =
+    '<svg class="order__icon" viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 0 1 5.83 2.42 8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.84-.2-.49-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.68-1.18.2-.58.2-1.08.15-1.18-.06-.11-.23-.17-.48-.29Z"/></svg>';
+
+  function hasNumber() {
+    var n = SHOP.settings.whatsapp;
+    return typeof n === "string" && /^\d{8,15}$/.test(n.trim());
+  }
+
+  function waLink(product) {
+    var msg =
+      "Hi! I'd like to order:\n\n" +
+      "• " + product.name + "\n" +
+      "• " + money(product.price) + "\n\n" +
+      "Is it available?";
+    return "https://wa.me/" + SHOP.settings.whatsapp.trim() + "?text=" + encodeURIComponent(msg);
+  }
+
+  function onOrder(product) {
+    if (!hasNumber()) {
+      toast(
+        "<strong>WhatsApp number not set yet.</strong>" +
+        "<span>Open the editor at <code>/admin</code>, go to " +
+        "<em>Settings</em>, and add the number — country code first, " +
+        "digits only. Example: <code>923001234567</code>.</span>",
+        9000
+      );
+      return;
+    }
+    window.open(waLink(product), "_blank", "noopener");
+  }
+
+  /* ── Render ──────────────────────────────────────────── */
+
+  function imagePath(file) {
+    if (!file) return "";
+    /* Editor writes a repo-root path; a bare filename still works. */
+    return file.indexOf("/") === -1 ? "images/" + file : file.replace(/^\//, "");
+  }
+
+  function cardHTML(p, i) {
+    var src = imagePath(p.image);
+    var media = src
+      ? '<img src="' + esc(src) + '" alt="' + esc(p.name) + '" loading="lazy" width="800" height="1000">'
+      : '<div class="card__slot"><span>Photo</span><small>' + esc(p.name) + '</small></div>';
+
+    var sold = p.sold ? '<span class="card__sold">Sold</span>' : "";
+
+    var button = p.sold
+      ? '<button class="order" type="button" aria-disabled="true" disabled>Sold — ask about a remake</button>'
+      : '<button class="order" type="button" data-i="' + i + '">' + waIcon + 'Order on WhatsApp</button>';
+
+    return (
+      '<li class="card' + (p.sold ? " is-sold" : "") + '">' +
+        '<div class="card__media">' + media + sold + '</div>' +
+        '<div class="card__head">' +
+          '<h3 class="card__name">' + esc(p.name) + '</h3>' +
+          '<p class="card__price tabular">' + esc(money(p.price)) + '</p>' +
+        '</div>' +
+        (p.note ? '<p class="card__note">' + esc(p.note) + '</p>' : "") +
+        button +
+      '</li>'
+    );
+  }
+
+  function render() {
+    var all = SHOP.products || [];
+    var items = [];
+    all.forEach(function (p, i) {
+      if (activeCategory === "All" || p.category === activeCategory) {
+        items.push({ p: p, i: i });
+      }
+    });
+
+    if (!all.length) {
+      grid.innerHTML =
+        '<li class="empty"><h2>The shop is empty just now.</h2>' +
+        '<p>New pieces are added as they are made. Follow along on Instagram in the meantime.</p></li>';
+      countEl.textContent = "";
+      return;
+    }
+
+    if (!items.length) {
+      grid.innerHTML =
+        '<li class="empty"><h2>Nothing in this category yet.</h2>' +
+        '<p>New pieces go up as they are made. Try another category, or ask on Instagram.</p></li>';
+    } else {
+      grid.innerHTML = items.map(function (o) { return cardHTML(o.p, o.i); }).join("");
+    }
+
+    var total = all.length;
+    var forSale = all.filter(function (p) { return !p.sold; }).length;
+    countEl.textContent =
+      total + (total === 1 ? " piece" : " pieces") +
+      (forSale < total ? " · " + forSale + " available" : "") + ".";
+  }
+
+  /* ── Filters ─────────────────────────────────────────── */
+
+  function categoryNames() {
+    var list = SHOP.categories || [];
+    return list.map(function (c) {
+      return typeof c === "string" ? c : (c && c.name) || "";
+    }).filter(Boolean);
+  }
+
+  function buildFilters() {
+    var cats = categoryNames();
+    if (!cats.length) { filterBar.innerHTML = ""; return; }
+
+    filterBar.innerHTML = ["All"].concat(cats).map(function (c) {
+      return '<button class="filter" type="button" data-cat="' + esc(c) + '" aria-pressed="' +
+             (c === activeCategory) + '">' + esc(c) + '</button>';
+    }).join("");
+  }
+
+  filterBar.addEventListener("click", function (e) {
+    var btn = e.target.closest(".filter");
+    if (!btn) return;
+    activeCategory = btn.dataset.cat;
+    filterBar.querySelectorAll(".filter").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.cat === activeCategory));
+    });
+    render();
+  });
+
+  grid.addEventListener("click", function (e) {
+    var btn = e.target.closest(".order[data-i]");
+    if (!btn) return;
+    var product = SHOP.products[+btn.dataset.i];
+    if (product) onOrder(product);
+  });
+
+  /* ── Apply editable copy ─────────────────────────────── */
+
+  function applySettings() {
+    var s = SHOP.settings || {};
+
+    setText("mast-tagline", s.tagline);
+    setText("foot-line", s.closing_line);
+    setText("story-1", s.story_1);
+    setText("story-2", s.story_2);
+
+    noticeEl.textContent = (typeof s.notice === "string") ? s.notice : "";
+
+    var handle = (s.instagram || "").replace(/^@/, "");
+    if (handle) {
+      var igUrl = "https://instagram.com/" + handle;
+      ["nav-instagram", "story-instagram", "foot-instagram"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) { el.href = igUrl; el.target = "_blank"; }
+      });
+      var footIg = document.querySelector("#foot-instagram span");
+      if (footIg) footIg.textContent = "@" + handle;
+    }
+
+    document.getElementById("mast-notice").textContent = hasNumber()
+      ? "Hand-strung on the shore"
+      : "Preview — WhatsApp number not set yet";
+  }
+
+  /* ── Boot ────────────────────────────────────────────── */
+
+  function start(data) {
+    if (data && typeof data === "object") {
+      SHOP.settings   = data.settings   || {};
+      SHOP.categories = data.categories || [];
+      SHOP.products   = (data.products  || []).filter(function (p) {
+        return p && p.name;                       /* skip half-saved rows */
+      });
+    }
+    applySettings();
+    buildFilters();
+    render();
+  }
+
+  fetch("shop.json", { cache: "no-store" })
+    .then(function (r) {
+      if (!r.ok) throw new Error("shop.json returned " + r.status);
+      return r.json();
+    })
+    .then(start)
+    .catch(function (err) {
+      /* Opened straight from the file system, or shop.json is missing.
+         Fall back to products.js if it is present, so the page still works. */
+      if (typeof window.PRODUCTS !== "undefined") {
+        start({
+          settings: {
+            whatsapp: window.WHATSAPP_NUMBER || "",
+            instagram: window.INSTAGRAM_HANDLE || "",
+            currency: window.CURRENCY || "Rs",
+            notice: window.SHOP_NOTICE || ""
+          },
+          categories: (window.CATEGORIES || []).map(function (n) { return { name: n }; }),
+          products: window.PRODUCTS
+        });
+        return;
+      }
+
+      start(null);
+      grid.innerHTML =
+        '<li class="empty"><h2>The shop could not load.</h2>' +
+        '<p>If you are opening this file directly from a folder, your browser blocks ' +
+        'reading <code>shop.json</code>. Upload the site, or run a local server, and it will work.</p></li>';
+      console.error(err);
+    });
+})();
+</script>
+
+</body>
+</html>

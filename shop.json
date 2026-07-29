@@ -1,0 +1,92 @@
+{
+  "settings": {
+    "whatsapp": "",
+    "instagram": "thecoastalcharms_",
+    "currency": "Rs",
+    "notice": "Made to order · 2–3 days · Delivery across Pakistan",
+    "tagline": "Sea-inspired jewellery and coastal treasures, gathered from the shores of Gwadar.",
+    "closing_line": "Picked up at low tide, sent out by post.",
+    "story_1": "The shells, the sea glass, the worn-smooth pieces that wash up along the Gwadar coast — they are collected by hand, sorted, and strung one at a time. No two pieces come out identical, because no two shells are.",
+    "story_2": "If you want something in a particular colour, or a length that fits you properly, say so in the message. Most pieces can be made your way."
+  },
+  "categories": [
+    { "name": "Bracelets" },
+    { "name": "Bag charms" },
+    { "name": "Phone straps" },
+    { "name": "Keyrings" }
+  ],
+  "products": [
+    {
+      "name": "Cowrie Strand Bracelet",
+      "price": 850,
+      "category": "Bracelets",
+      "image": "",
+      "note": "Turquoise and sand beads, single cowrie shell",
+      "sold": false
+    },
+    {
+      "name": "Sea Glass Drop Bracelet",
+      "price": 900,
+      "category": "Bracelets",
+      "image": "",
+      "note": "Tumbled glass, gathered at Gwadar",
+      "sold": false
+    },
+    {
+      "name": "Shell Stack — set of two",
+      "price": 1400,
+      "category": "Bracelets",
+      "image": "",
+      "note": "Wear together or apart",
+      "sold": false
+    },
+    {
+      "name": "Tide Bag Charm",
+      "price": 1200,
+      "category": "Bag charms",
+      "image": "",
+      "note": "Gold ring, shell cluster, mother-of-pearl",
+      "sold": false
+    },
+    {
+      "name": "Moonshell Bag Charm",
+      "price": 1350,
+      "category": "Bag charms",
+      "image": "",
+      "note": "Crescent drop with freshwater pearl",
+      "sold": false
+    },
+    {
+      "name": "Harbour Phone Strap",
+      "price": 1100,
+      "category": "Phone straps",
+      "image": "",
+      "note": "Fits any case with a strap card",
+      "sold": false
+    },
+    {
+      "name": "Shoreline Phone Charm",
+      "price": 950,
+      "category": "Phone straps",
+      "image": "",
+      "note": "Beaded, with a single scallop shell",
+      "sold": false
+    },
+    {
+      "name": "Driftwood Keyring",
+      "price": 700,
+      "category": "Keyrings",
+      "image": "",
+      "note": "Warm beads on a brass ring",
+      "sold": false
+    },
+    {
+      "name": "Gwadar Keyring",
+      "price": 750,
+      "category": "Keyrings",
+      "image": "",
+      "note": "Red and coral beads, hand-strung",
+      "sold": false
+    }
+  ]
+}
