@@ -77,8 +77,8 @@ collections:
                 widget: "string"
                 required: false
                 default: ""
-                pattern: ["^$|^[0-9]{8,15}$", "Digits only — country code first, no + and no spaces. Example: 923001234567"]
-                hint: "Country code first, digits only. 0300 1234567 becomes 923001234567"
+                pattern: ["^$|^92[0-9]{10}$|^0[0-9]{10}$", "Pakistani mobile number. Best format: 923365236845 (92, then the number without its leading 0). Typing 03365236845 also works."]
+                hint: "Write it as 92 followed by your number without the leading zero — 0336 5236845 becomes 923365236845"
 
               - label: "Instagram username"
                 name: "instagram"
