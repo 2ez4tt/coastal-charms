@@ -1,38 +1,50 @@
 # ══════════════════════════════════════════════════════════════
 #  The Coastal Charms — editor configuration
 #
-#  BEFORE THIS WORKS you must change ONE line below: `repo`.
-#  See SETUP-CMS.md in the folder above for the walkthrough.
+#  This is wired up and live. Nothing here needs changing unless
+#  the repo moves or the DecapBridge site is recreated.
+#  See SETUP-CMS.md in the folder above.
 # ══════════════════════════════════════════════════════════════
 
 backend:
   name: git-gateway
-
-  # Your GitHub username and repository name.
-  # Repo: github.com/2ez4tt/coastal-charms
   repo: 2ez4tt/coastal-charms
-
   branch: main
 
-  # ── CHANGE THIS TOO ──────────────────────────────────────────
-  # DecapBridge gives the shop owner email + password login, so
-  # they never need a GitHub account. Copy the identity_url from
-  # your DecapBridge dashboard (Step 3 in SETUP-CMS.md) — it ends
-  # with your own site id.
-  identity_url: https://auth.decapbridge.com/sites/YOUR-SITE-ID
+  # DecapBridge PKCE login — the shop owner signs in with an email
+  # and password (or Google / Microsoft) and never needs a GitHub
+  # account. These values come from the DecapBridge dashboard.
+  auth_type: pkce
+  base_url: https://auth.decapbridge.com
+  auth_endpoint: /sites/b4e969cc-b9c9-415e-a883-5b51a82dc192/pkce
+  auth_token_endpoint: /sites/b4e969cc-b9c9-415e-a883-5b51a82dc192/token
   gateway_url: https://gateway.decapbridge.com
 
+  # Records who made each change in the repo history.
   commit_messages:
-    create: 'Added {{collection}} "{{slug}}"'
-    update: 'Updated {{collection}} "{{slug}}"'
-    delete: 'Removed {{collection}} "{{slug}}"'
-    uploadMedia: 'Uploaded a photo'
-    deleteMedia: 'Removed a photo'
+    create: Create {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    update: Update {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    delete: Delete {{collection}} “{{slug}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    uploadMedia: Upload “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    deleteMedia: Delete “{{path}}” - {{author-name}} <{{author-login}}> via DecapBridge
+    openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
+
+# Names and avatars for logged-in editors.
+auth:
+  email_claim: email
+  first_name_claim: first_name
+  last_name_claim: last_name
+  avatar_url_claim: avatar_url
 
 # Where uploaded photos are stored in the repo, and how the
 # site refers to them once published.
 media_folder: "images/uploads"
 public_folder: "images/uploads"
+
+# "View site" link inside the editor.
+site_url: https://the-coastal-charms.netlify.app
+
+logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 
 # Interface language
 locale: en
